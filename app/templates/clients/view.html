@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ client.name }} - Lightweight ERP{% endblock %}
+{% block content %}
+<h2>Client: {{ client.name }}</h2>
+<div class="card" style="padding: 1rem; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+    <p><strong>Mobile:</strong> {{ client.mobile }}</p>
+    <p><strong>Email:</strong> {{ client.email or '-' }}</p>
+    <p><strong>Company:</strong> {{ client.company or '-' }}</p>
+    <p><strong>Notes:</strong> {{ client.notes or '-' }}</p>
+    <p><strong>Created:</strong> {{ client.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+</div>
+
+<h3>Associated Projects</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in client.projects %}
+        <tr>
+            <td>{{ project.title }}</td>
+            <td>{{ project.status.value }}</td>
+            <td><a href="/projects/{{ project.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+        {% if not client.projects %}
+        <tr><td colspan="3">No projects linked to this client.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

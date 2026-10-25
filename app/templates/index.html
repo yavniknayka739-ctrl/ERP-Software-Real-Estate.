@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightweight ERP</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Lightweight ERP</h1>
+            <ul>
+                <li><a href="/">Home</a></li>
+                {% if demo_mode %}
+                <li><a href="/demo">Explore Demo</a></li>
+                {% endif %}
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Welcome to Lightweight ERP</h2>
+        <p>A simple, secure, and fast system to manage your clients, projects, and commercial records.</p>
+        {% if demo_mode %}
+        <div>
+            <h3>Interactive Demo</h3>
+            <p>Try out the full features without registering. Data is isolated per visitor.</p>
+            <a href="/demo" class="button">Explore Demo</a>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>

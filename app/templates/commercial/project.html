@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Financials: {{ project.title }} - Lightweight ERP{% endblock %}
+{% block content %}
+<h2>Commercial: {{ project.title }}</h2>
+<p><strong>Agreed Amount:</strong> ₹{{ project.agreed_amount }}</p>
+
+{% if overpaid_warning %}
+<div style="background-color: var(--danger-color); color: white; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+    <strong>Warning:</strong> Total confirmed payments (₹{{ total_received }}) exceed the agreed project amount (₹{{ project.agreed_amount }}).
+</div>
+{% endif %}
+
+<div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color);">
+        <h3>Outstanding Balance</h3>
+        <p>Calculated as Agreed Amount (₹{{ project.agreed_amount }}) - Confirmed Payments (₹{{ total_received }})</p>
+        <p style="font-size: 1.5rem; font-weight: bold;">₹{{ outstanding }}</p>
+    </div>
+
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color);">
+        <h3>Calculated Profit</h3>
+        <p>Calculated as Agreed Amount (₹{{ project.agreed_amount }}) - Recorded Expenses (₹{{ total_expenses }})</p>
+        <p style="font-size: 1.5rem; font-weight: bold;">₹{{ profit }}</p>
+        <small>Based on recorded costs only.</small>
+    </div>
+</div>
+
+<h3>Payments</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Expected Date</th>
+            <th>Actual Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in project.payments %}
+        <tr>
+            <td>{{ p.description }}</td>
+            <td>₹{{ p.amount }}</td>
+            <td>{{ p.expected_date }}</td>
+            <td>{{ p.actual_date or '-' }}</td>
+            <td>{{ p.status.value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="card" style="margin-top: 1rem; padding: 1rem; border: 1px solid var(--border-color);">
+    <h4>Record Payment</h4>
+    <form
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+ action="/commercial/project/{{ project.id }}/payment" method="post">
+        <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+        <input type="text" name="description" placeholder="Description (e.g. Advance)" required>
+        <input type="date" name="expected_date" required>
+        <select name="status">
+            <option value="Pending">Pending</option>
+            <option value="Partially Paid">Partially Paid</option>
+            <option value="Paid">Paid</option>
+            <option value="Overdue">Overdue</option>
+        </select>
+        <input type="date" name="actual_date" title="Actual Date (if Paid)">
+        <button type="submit">Add Payment</button>
+    </form>
+</div>
+
+<h3>Expenses</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for e in project.expenses %}
+        <tr>
+            <td>{{ e.category }}</td>
+            <td>₹{{ e.amount }}</td>
+            <td>{{ e.expense_date }}</td>
+            <td>{{ e.notes or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="card" style="margin-top: 1rem; padding: 1rem; border: 1px solid var(--border-color);">
+    <h4>Record Expense</h4>
+    <form
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+ action="/commercial/project/{{ project.id }}/expense" method="post">
+        <input type="text" name="category" placeholder="Category" required>
+        <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+        <input type="date" name="expense_date" required>
+        <input type="text" name="notes" placeholder="Notes">
+        <button type="submit">Add Expense</button>
+    </form>
+</div>
+
+{% endblock %}

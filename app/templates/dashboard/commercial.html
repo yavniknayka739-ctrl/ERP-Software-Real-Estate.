@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Commercial Dashboard - Lightweight ERP{% endblock %}
+{% block content %}
+<h2>Commercial Dashboard</h2>
+<div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color); flex: 1;">
+        <h3>Total Revenue (Agreed)</h3>
+        <p style="font-size: 1.5rem; font-weight: bold;">₹{{ total_agreed }}</p>
+    </div>
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color); flex: 1;">
+        <h3>Total Received</h3>
+        <p style="font-size: 1.5rem; font-weight: bold;">₹{{ total_received }}</p>
+    </div>
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color); flex: 1;">
+        <h3>Outstanding</h3>
+        <p style="font-size: 1.5rem; font-weight: bold; color: var(--warning-color);">₹{{ total_outstanding }}</p>
+    </div>
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color); flex: 1;">
+        <h3>Overdue</h3>
+        <p style="font-size: 1.5rem; font-weight: bold; color: var(--danger-color);">₹{{ total_overdue }}</p>
+    </div>
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color); flex: 1;">
+        <h3>Total Profit (Calc)</h3>
+        <p style="font-size: 1.5rem; font-weight: bold; color: var(--success-color);">₹{{ total_profit }}</p>
+    </div>
+</div>
+
+<h3>Project Summaries</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Project</th>
+            <th>Agreed</th>
+            <th>Received</th>
+            <th>Outstanding</th>
+            <th>Expenses</th>
+            <th>Profit</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for summary in project_summaries %}
+        <tr>
+            <td>{{ summary.project.title }}</td>
+            <td>₹{{ summary.project.agreed_amount }}</td>
+            <td>₹{{ summary.received }}</td>
+            <td>
+                ₹{{ summary.outstanding }}
+                {% if summary.outstanding < 0 %}
+                <span style="color: var(--danger-color); font-weight: bold;">(Overpaid)</span>
+                {% endif %}
+            </td>
+            <td>₹{{ summary.expenses }}</td>
+            <td>₹{{ summary.profit }}</td>
+            <td><a href="/commercial/project/{{ summary.project.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+        {% if not project_summaries %}
+        <tr><td colspan="7">No projects available.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

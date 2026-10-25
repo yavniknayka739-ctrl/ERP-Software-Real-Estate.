@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Technical Dashboard - Lightweight ERP{% endblock %}
+{% block content %}
+<h2>Technical Dashboard</h2>
+<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <div class="card" style="padding: 1rem; border: 1px solid var(--border-color); flex: 1;">
+        <h3>Active Projects</h3>
+        <p style="font-size: 2rem; font-weight: bold;">{{ total_active }}</p>
+    </div>
+</div>
+
+<h3>Project Progress</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Progress</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for info in project_progress %}
+        <tr>
+            <td><a href="/projects/{{ info.project.id }}">{{ info.project.title }}</a></td>
+            <td>{{ info.project.status.value }}</td>
+            <td>
+                {{ info.progress }}
+                {% if info.warn_completed %}
+                <span style="color: var(--warning-color); font-weight: bold;" title="All activities completed, but project is not 'Completed'">(Warning: Check Status)</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% if not project_progress %}
+        <tr><td colspan="3">No projects available.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% endblock %}

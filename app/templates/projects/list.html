@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Projects - Lightweight ERP{% endblock %}
+{% block content %}
+<h2>Projects</h2>
+<a href="/projects/new" class="button">Add New Project</a>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Client</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+        <tr>
+            <td>{{ project.title }}</td>
+            <td>{{ project.client.name }}</td>
+            <td>{{ project.status.value }}</td>
+            <td><a href="/projects/{{ project.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+        {% if not projects %}
+        <tr><td colspan="4">No projects found.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

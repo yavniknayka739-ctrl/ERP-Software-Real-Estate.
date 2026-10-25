@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}New Client - Lightweight ERP{% endblock %}
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color);">
+    <h2>Add New Client</h2>
+    <form
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+ action="/clients/new" method="post" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+            <label>Name (Required):</label>
+            <input type="text" name="name" style="width: 100%; padding: 0.5rem;" required>
+        </div>
+        <div>
+            <label>Mobile (Required):</label>
+            <input type="text" name="mobile" style="width: 100%; padding: 0.5rem;" required>
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div>
+            <label>Company / Organization:</label>
+            <input type="text" name="company" style="width: 100%; padding: 0.5rem;">
+        </div>
+        <div>
+            <label>Notes:</label>
+            <textarea name="notes" rows="4" style="width: 100%; padding: 0.5rem;"></textarea>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="button">Create Client</button>
+            <a href="/clients" class="button" style="background-color: #95a5a6;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

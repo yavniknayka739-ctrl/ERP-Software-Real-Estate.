@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}New Project - Lightweight ERP{% endblock %}
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color);">
+    <h2>Add New Project</h2>
+    <form
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+ action="/projects/new" method="post" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+            <label>Client (Required):</label>
+            <select name="client_id" style="width: 100%; padding: 0.5rem;" required>
+                <option value="">Select a Client...</option>
+                {% for c in clients %}
+                <option value="{{ c.id }}">{{ c.name }} ({{ c.company or 'Individual' }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Title (Required):</label>
+            <input type="text" name="title" style="width: 100%; padding: 0.5rem;" required>
+        </div>
+        <div>
+            <label>Description / Requirements:</label>
+            <textarea name="description" rows="4" style="width: 100%; padding: 0.5rem;"></textarea>
+        </div>
+        <p><em>Note: Default project stages (Stage A, B, C) will be generated automatically.</em></p>
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="button">Create Project</button>
+            <a href="/projects" class="button" style="background-color: #95a5a6;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

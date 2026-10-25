@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lightweight ERP{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Lightweight ERP</h1>
+            <ul>
+                <li><a href="/">Home</a></li>
+                {% if user %}
+                    <li><a href="/clients">Clients</a></li>
+                    <li><a href="/dashboard/tech">Tech Dashboard</a></li>
+                    {% if user.role.value in ["Admin", "Commercial User"] %}
+                    <li><a href="/dashboard/commercial">Comm Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="/projects">Projects</a></li>
+                    <li><a href="/logout">Logout ({{ user.username }})</a></li>
+                {% else %}
+                    <li><a href="/login">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

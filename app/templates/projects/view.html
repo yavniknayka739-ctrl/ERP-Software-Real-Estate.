@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} - Lightweight ERP{% endblock %}
+{% block content %}
+<h2>{{ project.title }}</h2>
+<div class="card" style="padding: 1rem; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+    <p><strong>Client:</strong> <a href="/clients/{{ project.client_id }}">{{ project.client.name }}</a></p>
+    <p><strong>Status:</strong> {{ project.status.value }}</p>
+    <p><strong>Description:</strong> {{ project.description }}</p>
+
+    {% set all_acts = [] %}
+    {% for stage in project.stages %}
+        {% for act in stage.activities %}
+            {% set _ = all_acts.append(act) %}
+        {% endfor %}
+    {% endfor %}
+    {% set total_acts = all_acts|length %}
+    {% set comp_acts = all_acts|selectattr("status", "equalto", "Completed")|list|length %}
+
+    <p><strong>Project Progress:</strong> {% if total_acts == 0 %}N/A{% else %}{{ "%.1f"|format(comp_acts / total_acts * 100) }}%{% endif %}</p>
+</div>
+
+<h3>Stages & Activities</h3>
+{% for stage in project.stages %}
+<div class="card" style="border: 1px solid #ddd; margin-bottom: 1rem; padding: 1rem;">
+    <h4>{{ stage.name }} ({{ stage.status.value }})</h4>
+
+    {% set stage_total_acts = stage.activities|length %}
+    {% set stage_comp_acts = stage.activities|selectattr("status", "equalto", "Completed")|list|length %}
+    <p>Stage Progress: {% if stage_total_acts == 0 %}N/A{% else %}{{ "%.1f"|format(stage_comp_acts / stage_total_acts * 100) }}%{% endif %}</p>
+
+    <ul>
+    {% for activity in stage.activities %}
+        <li>
+            <strong>{{ activity.name }}</strong> - {{ activity.status.value }}
+            <form action="/activities/{{ activity.id }}/update_status" method="post" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <select name="status" onchange="this.form.submit()">
+                    <option value="Pending" {% if activity.status.value == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="In Progress" {% if activity.status.value == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Completed" {% if activity.status.value == 'Completed' %}selected{% endif %}>Completed</option>
+                </select>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+
+    {% if user.role.value in ["Admin", "Manager"] %}
+    <form action="/activities/assign/{{ stage.id }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="text" name="name" placeholder="New Activity Name" required>
+        <button type="submit">Add Activity</button>
+    </form>
+    {% endif %}
+</div>
+{% endfor %}
+
+{% endblock %}

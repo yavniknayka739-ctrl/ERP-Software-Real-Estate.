@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Login - Lightweight ERP{% endblock %}
+{% block content %}
+<div style="max-width: 400px; margin: 2rem auto; padding: 2rem; border: 1px solid var(--border-color); border-radius: 8px; background: white;">
+    <h2>Login</h2>
+    {% if error %}
+    <div style="color: var(--danger-color); margin-bottom: 1rem;">{{ error }}</div>
+    {% endif %}
+    <form
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+ action="/login" method="post">
+        <div style="margin-bottom: 1rem;">
+            <label>Username</label>
+            <input type="text" name="username" style="width: 100%; padding: 0.5rem;" required>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Password</label>
+            <input type="password" name="password" style="width: 100%; padding: 0.5rem;" required>
+        </div>
+        <button type="submit" class="button" style="width: 100%;">Login</button>
+    </form>
+
+    {% if settings and settings.DEMO_MODE %}
+    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+        <h4>Demo Accounts (Password matches username)</h4>
+        <ul style="font-size: 0.9rem;">
+            <li><strong>admin</strong> - Full access</li>
+            <li><strong>tech</strong> - Technical Employee</li>
+            <li><strong>manager</strong> - Manager</li>
+            <li><strong>commercial</strong> - Commercial User</li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

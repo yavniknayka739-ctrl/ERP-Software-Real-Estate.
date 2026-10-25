@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Clients - Lightweight ERP{% endblock %}
+{% block content %}
+<h2>Clients</h2>
+<a href="/clients/new" class="button">Add New Client</a>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Mobile</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+        <tr>
+            <td>{{ client.name }}</td>
+            <td>{{ client.company or '-' }}</td>
+            <td>{{ client.mobile }}</td>
+            <td><a href="/clients/{{ client.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+        {% if not clients %}
+        <tr><td colspan="4">No clients found.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}
